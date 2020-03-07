@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+    <html>
+    <head>
+        <meta charset="UTF-8">
+        <title>API</title>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.10.2/dist/katex.min.css" integrity="sha384-yFRtMMDnQtDRO8rLpMIKrtPCD5jdktao2TV19YiZYWMDkUR5GQZR/NOVTdquEx1j" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Microsoft/vscode/extensions/markdown-language-features/media/markdown.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Microsoft/vscode/extensions/markdown-language-features/media/highlight.css">
+        <link href="https://cdn.jsdelivr.net/npm/katex-copytex@latest/dist/katex-copytex.min.css" rel="stylesheet" type="text/css">
+        <style>
+.task-list-item { list-style-type: none; } .task-list-item-checkbox { margin-left: -20px; vertical-align: middle; }
+</style>
+        <style>
+            body {
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe WPC', 'Segoe UI', 'Ubuntu', 'Droid Sans', sans-serif;
+                font-size: 14px;
+                line-height: 1.6;
+            }
+        </style>
+        
+        <script src="https://cdn.jsdelivr.net/npm/katex-copytex@latest/dist/katex-copytex.min.js"></script>
+    </head>
+    <body>
+        <!-- @format -->
+<h1 id="api">API</h1>
+<h2 id="yelp">Yelp</h2>
+<p><a href="yelp.com/developers">Yelp API Documentation</a></p>
+<p>Client ID: 1TM9fIRE46lOIH5kQQYkYg</p>
+<p>API Key: ELFSsmapUFjimTyFhBFQjk-3aY4dBh3PZqE5Oo3TIo9AZ8zEUh0fmgxHeXwEYRYpZc7YCVKGZg-Qk_A-swrffYSJi4omA3vOQetJkO9CNVPwmHJ6Zrx3lEHC5aNiXnYx</p>
+<h3 id="endpoints">Endpoints</h3>
+<h4 id="request">Request</h4>
+<p>GET <a href="https://api.yelp.com/v3/businesses/search">https://api.yelp.com/v3/businesses/search</a></p>
+<h4 id="parameters">Parameters</h4>
+<p>Parameters
+These parameters should be in the query string.</p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>term</td>
+<td>string</td>
+<td>Optional. Search term, for example &quot;food&quot; or &quot;restaurants&quot;. The term may also be business names, such as &quot;Starbucks&quot;. If term is not included the endpoint will default to searching across businesses from a small number of popular categories.</td>
+</tr>
+<tr>
+<td>location</td>
+<td>string</td>
+<td>Required if either latitude or longitude is not provided. This string indicates the geographic area to be used when searching for businesses. Examples: &quot;New York City&quot;, &quot;NYC&quot;, &quot;350 5th Ave, New York, NY 10118&quot;. Businesses returned in the response may not be strictly within the specified location.</td>
+</tr>
+<tr>
+<td>latitude</td>
+<td>decimal</td>
+<td>Required if location is not provided. Latitude of the location you want to search nearby.</td>
+</tr>
+<tr>
+<td>longitude</td>
+<td>decimal</td>
+<td>Required if location is not provided. Longitude of the location you want to search nearby.</td>
+</tr>
+<tr>
+<td>radius</td>
+<td>int</td>
+<td>Optional. A suggested search radius in meters. This field is used as a suggestion to the search. The actual search radius may be lower than the suggested radius in dense urban areas, and higher in regions of less business density. If the specified value is too large, a AREA_TOO_LARGE error may be returned. The max value is 40000 meters (about 25 miles).</td>
+</tr>
+<tr>
+<td>categories</td>
+<td>string</td>
+<td>Optional. Categories to filter the search results with. See the list of supported categories. The category filter can be a list of comma delimited categories. For example, &quot;bars,french&quot; will filter by Bars OR French. The category identifier should be used (for example &quot;discgolf&quot;, not &quot;Disc Golf&quot;).</td>
+</tr>
+<tr>
+<td>locale</td>
+<td>string</td>
+<td>Optional. Specify the locale into which to localize the business information. See the list of supported locales. Defaults to en_US.</td>
+</tr>
+<tr>
+<td>limit</td>
+<td>int</td>
+<td>Optional. Number of business results to return. By default, it will return 20. Maximum is 50.</td>
+</tr>
+<tr>
+<td>offset</td>
+<td>int</td>
+<td>Optional. Offset the list of returned business results by this amount.</td>
+</tr>
+<tr>
+<td>sort_by</td>
+<td>string</td>
+<td>Optional. Suggestion to the search algorithm that the results be sorted by one of the these modes: best_match, rating, review_count or distance. The default is best_match. Note that specifying the sort_by is a suggestion (not strictly enforced) to Yelp's search, which considers multiple input parameters to return the most relevant results. For example, the rating sort is not strictly sorted by the rating value, but by an adjusted rating value that takes into account the number of ratings, similar to a Bayesian average. This is to prevent skewing results to businesses with a single review.</td>
+</tr>
+<tr>
+<td>price</td>
+<td>string</td>
+<td>Optional. Pricing levels to filter the search result with: 1 = $, 2 = $$, 3 = $$$, 4 = $$$$. The price filter can be a list of comma delimited pricing levels. For example, &quot;1, 2, 3&quot; will filter the results to show the ones that are $, $$, or $$$.</td>
+</tr>
+<tr>
+<td>open_now</td>
+<td>boolean</td>
+<td>Optional. Default to false. When set to true, only return the businesses open now. Notice that open_at and open_now cannot be used together.</td>
+</tr>
+<tr>
+<td>open_at</td>
+<td>int</td>
+<td>Optional. An integer represending the Unix time in the same timezone of the search location. If specified, it will return business open at the given time. Notice that open_at and open_now cannot be used together.</td>
+</tr>
+<tr>
+<td>attributes</td>
+<td>string</td>
+<td>Optional. Try these additional filters to return specific search results!</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>hot_and_new - popular businesses which recently joined Yelp</li>
+<li>request_a_quote - businesses which actively reply to Request a Quote inquiries</li>
+<li>reservation - businesses with Yelp Reservations bookings enabled on their profile page</li>
+<li>waitlist_reservation - businesses with Yelp Waitlist bookings enabled on their profile screen (iOS/Android)</li>
+<li>cashback - businesses offering Yelp Cash Back to in-house customers</li>
+<li>deals - businesses offering Yelp Deals on their profile page</li>
+<li>gender_neutral_restrooms - businesses which provide gender neutral restrooms</li>
+<li>open_to_all - businesses which are Open To All</li>
+<li>wheelchair_accessible - businesses which are Wheelchair Accessible</li>
+</ul>
+<p>You can combine multiple attributes by providing a comma separated like &quot;attribute1,attribute2&quot;. If multiple attributes are used, only businesses that satisfy ALL attributes will be returned in search results. For example, the attributes &quot;hot_and_new,cashback&quot; will return businesses that are Hot and New AND offer Cash Back.</p>
+<h4 id="response">Response</h4>
+<pre><code class="language-json"><div>{
+  <span class="hljs-attr">"total"</span>: <span class="hljs-number">8228</span>,
+  <span class="hljs-attr">"businesses"</span>: [
+    {
+      <span class="hljs-attr">"rating"</span>: <span class="hljs-number">4</span>,
+      <span class="hljs-attr">"price"</span>: <span class="hljs-string">"$"</span>,
+      <span class="hljs-attr">"phone"</span>: <span class="hljs-string">"+14152520800"</span>,
+      <span class="hljs-attr">"id"</span>: <span class="hljs-string">"E8RJkjfdcwgtyoPMjQ_Olg"</span>,
+      <span class="hljs-attr">"alias"</span>: <span class="hljs-string">"four-barrel-coffee-san-francisco"</span>,
+      <span class="hljs-attr">"is_closed"</span>: <span class="hljs-literal">false</span>,
+      <span class="hljs-attr">"categories"</span>: [
+        {
+          <span class="hljs-attr">"alias"</span>: <span class="hljs-string">"coffee"</span>,
+          <span class="hljs-attr">"title"</span>: <span class="hljs-string">"Coffee &amp; Tea"</span>
+        }
+      ],
+      <span class="hljs-attr">"review_count"</span>: <span class="hljs-number">1738</span>,
+      <span class="hljs-attr">"name"</span>: <span class="hljs-string">"Four Barrel Coffee"</span>,
+      <span class="hljs-attr">"url"</span>: <span class="hljs-string">"https://www.yelp.com/biz/four-barrel-coffee-san-francisco"</span>,
+      <span class="hljs-attr">"coordinates"</span>: {
+        <span class="hljs-attr">"latitude"</span>: <span class="hljs-number">37.7670169511878</span>,
+        <span class="hljs-attr">"longitude"</span>: <span class="hljs-number">-122.42184275</span>
+      },
+      <span class="hljs-attr">"image_url"</span>: <span class="hljs-string">"http://s3-media2.fl.yelpcdn.com/bphoto/MmgtASP3l_t4tPCL1iAsCg/o.jpg"</span>,
+      <span class="hljs-attr">"location"</span>: {
+        <span class="hljs-attr">"city"</span>: <span class="hljs-string">"San Francisco"</span>,
+        <span class="hljs-attr">"country"</span>: <span class="hljs-string">"US"</span>,
+        <span class="hljs-attr">"address2"</span>: <span class="hljs-string">""</span>,
+        <span class="hljs-attr">"address3"</span>: <span class="hljs-string">""</span>,
+        <span class="hljs-attr">"state"</span>: <span class="hljs-string">"CA"</span>,
+        <span class="hljs-attr">"address1"</span>: <span class="hljs-string">"375 Valencia St"</span>,
+        <span class="hljs-attr">"zip_code"</span>: <span class="hljs-string">"94103"</span>
+      },
+      <span class="hljs-attr">"distance"</span>: <span class="hljs-number">1604.23</span>,
+      <span class="hljs-attr">"transactions"</span>: [<span class="hljs-string">"pickup"</span>, <span class="hljs-string">"delivery"</span>]
+    }
+    // ...
+  ],
+  <span class="hljs-attr">"region"</span>: {
+    <span class="hljs-attr">"center"</span>: {
+      <span class="hljs-attr">"latitude"</span>: <span class="hljs-number">37.767413217936834</span>,
+      <span class="hljs-attr">"longitude"</span>: <span class="hljs-number">-122.42820739746094</span>
+    }
+  }
+}
+</div></code></pre>
+<h2 id="business-details">Business Details</h2>
+<h3 id="request-1">Request</h3>
+<p>GET <a href="https://api.yelp.com/v3/businesses/%7Bid%7D">https://api.yelp.com/v3/businesses/{id}</a></p>
+<h3 id="parameters-1">Parameters</h3>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>locale</td>
+<td>string</td>
+<td>Optional. Specify the locale into which to localize the business information. See the list of supported locales. Defaults to en_US.</td>
+</tr>
+</tbody>
+</table>
+<h4 id="response-body">Response Body</h4>
+<pre><code class="language-json"><div>{
+  <span class="hljs-attr">"id"</span>: <span class="hljs-string">"WavvLdfdP6g8aZTtbBQHTw"</span>,
+  <span class="hljs-attr">"alias"</span>: <span class="hljs-string">"gary-danko-san-francisco"</span>,
+  <span class="hljs-attr">"name"</span>: <span class="hljs-string">"Gary Danko"</span>,
+  <span class="hljs-attr">"image_url"</span>: <span class="hljs-string">"https://s3-media2.fl.yelpcdn.com/bphoto/CPc91bGzKBe95aM5edjhhQ/o.jpg"</span>,
+  <span class="hljs-attr">"is_claimed"</span>: <span class="hljs-literal">true</span>,
+  <span class="hljs-attr">"is_closed"</span>: <span class="hljs-literal">false</span>,
+  <span class="hljs-attr">"url"</span>: <span class="hljs-string">"https://www.yelp.com/biz/gary-danko-san-francisco?adjust_creative=wpr6gw4FnptTrk1CeT8POg&amp;utm_campaign=yelp_api_v3&amp;utm_medium=api_v3_business_lookup&amp;utm_source=wpr6gw4FnptTrk1CeT8POg"</span>,
+  <span class="hljs-attr">"phone"</span>: <span class="hljs-string">"+14157492060"</span>,
+  <span class="hljs-attr">"display_phone"</span>: <span class="hljs-string">"(415) 749-2060"</span>,
+  <span class="hljs-attr">"review_count"</span>: <span class="hljs-number">5296</span>,
+  <span class="hljs-attr">"categories"</span>: [
+    {
+      <span class="hljs-attr">"alias"</span>: <span class="hljs-string">"newamerican"</span>,
+      <span class="hljs-attr">"title"</span>: <span class="hljs-string">"American (New)"</span>
+    },
+    {
+      <span class="hljs-attr">"alias"</span>: <span class="hljs-string">"french"</span>,
+      <span class="hljs-attr">"title"</span>: <span class="hljs-string">"French"</span>
+    },
+    {
+      <span class="hljs-attr">"alias"</span>: <span class="hljs-string">"wine_bars"</span>,
+      <span class="hljs-attr">"title"</span>: <span class="hljs-string">"Wine Bars"</span>
+    }
+  ],
+  <span class="hljs-attr">"rating"</span>: <span class="hljs-number">4.5</span>,
+  <span class="hljs-attr">"location"</span>: {
+    <span class="hljs-attr">"address1"</span>: <span class="hljs-string">"800 N Point St"</span>,
+    <span class="hljs-attr">"address2"</span>: <span class="hljs-string">""</span>,
+    <span class="hljs-attr">"address3"</span>: <span class="hljs-string">""</span>,
+    <span class="hljs-attr">"city"</span>: <span class="hljs-string">"San Francisco"</span>,
+    <span class="hljs-attr">"zip_code"</span>: <span class="hljs-string">"94109"</span>,
+    <span class="hljs-attr">"country"</span>: <span class="hljs-string">"US"</span>,
+    <span class="hljs-attr">"state"</span>: <span class="hljs-string">"CA"</span>,
+    <span class="hljs-attr">"display_address"</span>: [<span class="hljs-string">"800 N Point St"</span>, <span class="hljs-string">"San Francisco, CA 94109"</span>],
+    <span class="hljs-attr">"cross_streets"</span>: <span class="hljs-string">""</span>
+  },
+  <span class="hljs-attr">"coordinates"</span>: {
+    <span class="hljs-attr">"latitude"</span>: <span class="hljs-number">37.80587</span>,
+    <span class="hljs-attr">"longitude"</span>: <span class="hljs-number">-122.42058</span>
+  },
+  <span class="hljs-attr">"photos"</span>: [
+    <span class="hljs-string">"https://s3-media2.fl.yelpcdn.com/bphoto/CPc91bGzKBe95aM5edjhhQ/o.jpg"</span>,
+    <span class="hljs-string">"https://s3-media4.fl.yelpcdn.com/bphoto/FmXn6cYO1Mm03UNO5cbOqw/o.jpg"</span>,
+    <span class="hljs-string">"https://s3-media4.fl.yelpcdn.com/bphoto/HZVDyYaghwPl2kVbvHuHjA/o.jpg"</span>
+  ],
+  <span class="hljs-attr">"price"</span>: <span class="hljs-string">"$$$$"</span>,
+  <span class="hljs-attr">"hours"</span>: [
+    {
+      <span class="hljs-attr">"open"</span>: [
+        {
+          <span class="hljs-attr">"is_overnight"</span>: <span class="hljs-literal">false</span>,
+          <span class="hljs-attr">"start"</span>: <span class="hljs-string">"1730"</span>,
+          <span class="hljs-attr">"end"</span>: <span class="hljs-string">"2200"</span>,
+          <span class="hljs-attr">"day"</span>: <span class="hljs-number">0</span>
+        },
+        {
+          <span class="hljs-attr">"is_overnight"</span>: <span class="hljs-literal">false</span>,
+          <span class="hljs-attr">"start"</span>: <span class="hljs-string">"1730"</span>,
+          <span class="hljs-attr">"end"</span>: <span class="hljs-string">"2200"</span>,
+          <span class="hljs-attr">"day"</span>: <span class="hljs-number">1</span>
+        },
+        {
+          <span class="hljs-attr">"is_overnight"</span>: <span class="hljs-literal">false</span>,
+          <span class="hljs-attr">"start"</span>: <span class="hljs-string">"1730"</span>,
+          <span class="hljs-attr">"end"</span>: <span class="hljs-string">"2200"</span>,
+          <span class="hljs-attr">"day"</span>: <span class="hljs-number">2</span>
+        },
+        {
+          <span class="hljs-attr">"is_overnight"</span>: <span class="hljs-literal">false</span>,
+          <span class="hljs-attr">"start"</span>: <span class="hljs-string">"1730"</span>,
+          <span class="hljs-attr">"end"</span>: <span class="hljs-string">"2200"</span>,
+          <span class="hljs-attr">"day"</span>: <span class="hljs-number">3</span>
+        },
+        {
+          <span class="hljs-attr">"is_overnight"</span>: <span class="hljs-literal">false</span>,
+          <span class="hljs-attr">"start"</span>: <span class="hljs-string">"1730"</span>,
+          <span class="hljs-attr">"end"</span>: <span class="hljs-string">"2200"</span>,
+          <span class="hljs-attr">"day"</span>: <span class="hljs-number">4</span>
+        },
+        {
+          <span class="hljs-attr">"is_overnight"</span>: <span class="hljs-literal">false</span>,
+          <span class="hljs-attr">"start"</span>: <span class="hljs-string">"1730"</span>,
+          <span class="hljs-attr">"end"</span>: <span class="hljs-string">"2200"</span>,
+          <span class="hljs-attr">"day"</span>: <span class="hljs-number">5</span>
+        },
+        {
+          <span class="hljs-attr">"is_overnight"</span>: <span class="hljs-literal">false</span>,
+          <span class="hljs-attr">"start"</span>: <span class="hljs-string">"1730"</span>,
+          <span class="hljs-attr">"end"</span>: <span class="hljs-string">"2200"</span>,
+          <span class="hljs-attr">"day"</span>: <span class="hljs-number">6</span>
+        }
+      ],
+      <span class="hljs-attr">"hours_type"</span>: <span class="hljs-string">"REGULAR"</span>,
+      <span class="hljs-attr">"is_open_now"</span>: <span class="hljs-literal">false</span>
+    }
+  ],
+  <span class="hljs-attr">"transactions"</span>: [],
+  <span class="hljs-attr">"special_hours"</span>: [
+    {
+      <span class="hljs-attr">"date"</span>: <span class="hljs-string">"2019-02-07"</span>,
+      <span class="hljs-attr">"is_closed"</span>: <span class="hljs-literal">null</span>,
+      <span class="hljs-attr">"start"</span>: <span class="hljs-string">"1600"</span>,
+      <span class="hljs-attr">"end"</span>: <span class="hljs-string">"2000"</span>,
+      <span class="hljs-attr">"is_overnight"</span>: <span class="hljs-literal">false</span>
+    }
+  ]
+}
+</div></code></pre>
+
+    </body>
+    </html>
